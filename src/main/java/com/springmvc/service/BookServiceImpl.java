@@ -1,6 +1,8 @@
 package com.springmvc.service;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,6 +22,32 @@ public class BookServiceImpl implements BookService {
 		System.out.println("BookService에서 책 목록 보내주는 중...");
 		
 		return bookRepository.getAllBookList();
+	}
+
+	@Override
+	public List<Book> getBookListByCategory(String category) {
+		List<Book> booksByCategory = bookRepository.getBookListByCategory(category);
+		System.out.println("서비스에서 요청 처리중...");
+		return booksByCategory;
+	}
+
+	@Override
+	public Set<Book> getBookListByFilter(Map<String, List<String>> filter) {
+		// TODO Auto-generated method stub
+		
+		System.out.println("서비스에서 필터 요청 받는중...");
+		Set<Book> booksByFilter = bookRepository.getBookListByFilter(filter);
+		
+		return booksByFilter;
+	}
+
+	@Override
+	public Book getBookById(String BookId) {
+		// TODO Auto-generated method stub
+		
+		Book bookById = bookRepository.getBookById(BookId);
+		System.out.println("서비스에서 도서 정보 이동중...");
+		return bookById;
 	}
 
 }

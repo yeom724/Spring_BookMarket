@@ -1,12 +1,17 @@
 package com.springmvc.repository;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.springframework.stereotype.Repository;
 
 import com.springmvc.domain.Book;
 
+// 레파지토리 지정하여 미리 생성될 수 있도록 함
+// 이렇게 생성된 객체는 모두 자동적으로 static(유일한 하나의 객체)이 되기 때문에 별도 생성자로 생성하지 않은 것을 확인할 수 있다.
 @Repository
 public class BookRepositoryImpl implements BookRepository {
 
@@ -52,6 +57,110 @@ public class BookRepositoryImpl implements BookRepository {
 		// TODO Auto-generated method stub
 		System.out.println("책 목록 서비스에 전달중...");
 		return listOfBooks;
+	}
+	
+	public List<Book> getBookListByCategory(String category){
+		System.out.println("카테고리별 책을 추출합니다.");
+		List<Book> bookByCategory = new ArrayList<Book>();
+		
+		for(int i = 0; i<listOfBooks.size(); i++) {
+			Book book = listOfBooks.get(i);
+			
+			if(category.equalsIgnoreCase(book.getCategory())) {
+				bookByCategory.add(book);
+				System.out.println(category + " 발견!");
+			}
+			
+		}
+		
+		System.out.println("서비스로 책을 보내는 중...");
+		return bookByCategory;
+		
+	}
+
+
+	@Override
+	public Set<Book> getBookListByFilter(Map<String, List<String>> filter) {
+		
+		System.out.println("필터 검색에 도착하셨습니다...");
+		Set<Book> booksByPublisher = new HashSet<Book>();
+		Set<Book> booksByCategory = new HashSet<Book>();
+		
+		Set<String> booksByFilter = filter.keySet();
+		// 가져온 Set에서 키만 가져온다, 키 값은 String으로 저장되어 있기 때문에 String형식으로 받는다.
+		
+		if(booksByFilter.contains("publisher")) {
+			System.out.println("publisher if문 진입");
+			
+			//filter.get("publisher").size() publisher key가 있는지 확인하고 그 크기를 계산하여 반영됨
+			
+			for(int j = 0; j < filter.get("publisher").size(); j++) {
+				String publisherName = filter.get("publisher").get(j);
+				System.out.println("publisher 검색어 : " + publisherName);
+				
+				for(int i = 0; i < listOfBooks.size(); i++) {
+					Book book = listOfBooks.get(i);
+					
+					if(publisherName.equalsIgnoreCase(book.getPublisher())) {
+						booksByPublisher.add(book);
+					}
+				}
+				
+			}
+			
+			System.out.println("publisher - 책 정보 저장에 성공했습니다.");
+			
+		}
+		
+		if(booksByFilter.contains("category")) {
+			System.out.println("category if문 진입");
+			
+			for(int i = 0; i<filter.get("category").size(); i++) {
+				
+				String category = filter.get("category").get(i);
+				System.out.println(i+"번째 category"+category);
+				
+				List<Book> list = getBookListByCategory(category);
+				
+				booksByCategory.addAll(list);
+			}
+			
+			System.out.println("Category - 책 정보 저장에 성공했습니다.");
+		}
+		
+		booksByCategory.retainAll(booksByPublisher);
+		//퍼블리셔와 카테고리의 교집합을 가려내어 담아 이동
+		System.out.println("서비스로 이동합니다.");
+		return booksByCategory;
+	}
+
+
+	@Override
+	public Book getBookById(String BookId) {
+		// TODO Auto-generated method stub
+		
+		System.out.println("해당 도서를 찾습니다 : "+ BookId);
+		
+		Book bookInfo = null;
+		
+		for(int i=0; i<listOfBooks.size(); i++) {
+			
+			Book book = listOfBooks.get(i);
+			
+			if(book != null && book.getBookId() != null && book.getBookId().equals(BookId)) {
+				bookInfo = book;
+				System.out.println("해당 도서 발견!");
+				break;
+			}
+			
+		}
+		
+		if(bookInfo == null) {
+			throw new IllegalArgumentException("도서 ID가" + BookId + "인 해당 도서를 찾을 수 없습니다.");
+		}
+		
+		System.out.println("서비스로 넘어갑니다...");
+		return bookInfo;
 	}
 
 }

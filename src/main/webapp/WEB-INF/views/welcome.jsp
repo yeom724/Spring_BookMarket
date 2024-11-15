@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<link href="resources/css/bootstrap.min.css" rel="stylesheet">
+<link href="/spring_BookMarket/resources/css/bootstrap.min.css" rel="stylesheet">
 <meta charset="UTF-8">
 <title>Insert title here</title>
 </head>
@@ -11,8 +11,9 @@
 	<nav class="navbar navbar-expand navbar-dark bg-dark">
 		<div class="container">
 			<div class="navbar-header">
-				<a class="navbar-brand" href="./">Home</a>
-				<a class="navbar-brand" href="./books">Books</a>
+				<a class="navbar-brand" href="/spring_BookMarket/">Home</a>
+				<a class="navbar-brand" href="/spring_BookMarket/books">Books</a>
+				<a class="navbar-brand" href="/spring_BookMarket/books/all">All</a>
 			</div>
 		</div>
 	</nav>
