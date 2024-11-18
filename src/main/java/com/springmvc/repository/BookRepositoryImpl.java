@@ -163,4 +163,13 @@ public class BookRepositoryImpl implements BookRepository {
 		return bookInfo;
 	}
 
+
+	@Override
+	public void setNewBook(Book book) {
+		// TODO Auto-generated method stub
+		System.out.println("레파지토리 도착, book 정보를 저장합니다.");
+		listOfBooks.add(book);
+		
+	}
+
 }

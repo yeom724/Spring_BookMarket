@@ -50,4 +50,11 @@ public class BookServiceImpl implements BookService {
 		return bookById;
 	}
 
+	@Override
+	public void setNewBook(Book book) {
+		// TODO Auto-generated method stub
+		System.out.println("서비스에서 book 객체 레파지토리로 보내는 중...");
+		bookRepository.setNewBook(book);
+	}
+
 }

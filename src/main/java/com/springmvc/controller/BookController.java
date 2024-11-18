@@ -7,10 +7,14 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.MatrixVariable;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -101,5 +105,33 @@ public class BookController {
 		
 		System.out.println("도서 정보를 표시합니다.");
 		return "book";
+	}
+	
+	@GetMapping("/add")
+	public String requestAddBookForm(@ModelAttribute("NewBook") Book book) {
+		System.out.println("도서 추가 목록 페이지로 이동합니다...");
+		return "addBook";
+	}
+	
+	@PostMapping("/add")
+	public String submitAddNewBook(@ModelAttribute("NewBook") Book book) {
+		System.out.println("도서 추가를 시작합니다.");
+		//여기서 파라미터를 보내는 생성자를 쓰는 것이 아니라, book() 기본 생성자를 사용하기 때문에 해당 기본 생성자가 존재해야 한다.
+		bookService.setNewBook(book);
+		
+		System.out.println("도서목록 페이지로 돌아갑니다.");
+		return "redirect:/books";
+	}
+	
+	@ModelAttribute
+	public void addAttributes(Model model) {
+		model.addAttribute("addTitle","신규 도서 등록");
+		//redirect로 이동하게 되면 모델을 표시해주기 위해 주소창에 붙어서 이동 (서버를 나갔기 때문)
+	}
+	
+	@InitBinder
+	public void initBinder(WebDataBinder binder) {
+		binder.setAllowedFields("bookId","name","unitPrice","author","description","publisher","category",
+				"unitsInStock","totalPages","releaseDate","condition");
 	}
 }

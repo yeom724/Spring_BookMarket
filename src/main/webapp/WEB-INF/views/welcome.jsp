@@ -14,6 +14,7 @@
 				<a class="navbar-brand" href="/spring_BookMarket/">Home</a>
 				<a class="navbar-brand" href="/spring_BookMarket/books">Books</a>
 				<a class="navbar-brand" href="/spring_BookMarket/books/all">All</a>
+				<a class="navbar-brand" href="/spring_BookMarket/books/add">NewBook</a>
 			</div>
 		</div>
 	</nav>
