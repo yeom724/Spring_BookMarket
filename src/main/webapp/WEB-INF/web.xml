@@ -9,9 +9,12 @@
      <!-- The definition of the Root Spring Container shared by all Servlets and Filters -->
    <context-param>
       <param-name>contextConfigLocation</param-name>
-      <param-value>/WEB-INF/spring/root-context.xml</param-value>
+      <param-value>
+      /WEB-INF/spring/root-context.xml
+      /WEB-INF/spring/security-context.xml
+      </param-value>
    </context-param>
-   
+   <!--      /WEB-INF/spring/security-context.xml -->
    <!-- Creates the Spring Container shared by all Servlets and Filters -->
    <listener>
       <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
@@ -48,4 +51,15 @@
    		<url-pattern>/*</url-pattern>
    </filter-mapping>
    <!-- url을 통해 움직이려면 서블렛을 사용 -->
+   
+   <filter>
+   		<filter-name>springSecurityFilterChain</filter-name>
+   		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+   </filter>
+   <filter-mapping>
+   		<filter-name>springSecurityFilterChain</filter-name>
+   		<url-pattern>/*</url-pattern>
+   </filter-mapping>
+   <!-- 필터기능 -->
+   
 </web-app>

@@ -1,3 +1,4 @@
+<%@page import="com.springmvc.domain.Book"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
         
@@ -30,7 +31,23 @@
 	
 	<div class="container">
 		<div class="row">
-			<div class="col-md-12">
+			<div class="col-md-4">
+				<%
+					Book book = (Book)request.getAttribute("book");
+					
+					if(book.getBookImage() == null){
+				%>
+						<img src="/spring_BookMarket/resources/images/<%= book.getBookId() %>.png" style="width: 100%;">
+				<%
+					} else {
+				%>
+						<img src="/spring_BookMarket/resources/images/<%= book.getBookImage().getOriginalFilename() %>" style="width: 60%;">
+				<%
+					}
+				%>
+			</div>
+		
+			<div class="col-md-8">
 				<h3>${book.name}</h3>
 				<p>${book.description}</p>
 				<br>

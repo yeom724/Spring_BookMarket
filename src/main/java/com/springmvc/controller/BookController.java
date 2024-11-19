@@ -1,8 +1,11 @@
 package com.springmvc.controller;
 
+import java.io.File;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,6 +21,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.springmvc.domain.Book;
@@ -114,9 +118,27 @@ public class BookController {
 	}
 	
 	@PostMapping("/add")
-	public String submitAddNewBook(@ModelAttribute("NewBook") Book book) {
+	public String submitAddNewBook(@ModelAttribute("NewBook") Book book, HttpServletRequest req) {
 		System.out.println("도서 추가를 시작합니다.");
 		//여기서 파라미터를 보내는 생성자를 쓰는 것이 아니라, book() 기본 생성자를 사용하기 때문에 해당 기본 생성자가 존재해야 한다.
+		
+		MultipartFile bookImage = book.getBookImage();
+		
+		String save = req.getServletContext().getRealPath("resources/images");
+		String saveName = bookImage.getOriginalFilename();
+		System.out.println("저장경로 : "+save +" 파일이름 : "+saveName);
+		File saveFile = new File(save + "/" + saveName);
+		
+		if(bookImage != null && !(bookImage.isEmpty())) {
+			
+			try {
+				System.out.println("도서 이미지 파일 처리중입니다.");
+				bookImage.transferTo(saveFile);
+				
+			} catch(Exception e) { throw new RuntimeException("도서 이미지 업로드가 실패하였습니다.", e); }
+			
+		}
+		
 		bookService.setNewBook(book);
 		
 		System.out.println("도서목록 페이지로 돌아갑니다.");
@@ -132,6 +154,6 @@ public class BookController {
 	@InitBinder
 	public void initBinder(WebDataBinder binder) {
 		binder.setAllowedFields("bookId","name","unitPrice","author","description","publisher","category",
-				"unitsInStock","totalPages","releaseDate","condition");
+				"unitsInStock","totalPages","releaseDate","condition","bookImage");
 	}
 }

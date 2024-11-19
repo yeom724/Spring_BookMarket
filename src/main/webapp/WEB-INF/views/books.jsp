@@ -1,3 +1,5 @@
+<%@page import="java.util.List"%>
+<%@page import="com.springmvc.domain.Book"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
     
@@ -30,16 +32,35 @@
 	
 	<div class="container">
 		<div class="row" align="center">
-			<c:forEach items="${bookList}" var="book">
+			<%
+				List<Book> list = (List<Book>)request.getAttribute("bookList");
+			
+				for(int i=0; i<list.size(); i++){
+					Book book = list.get(i);
+			%>
 				<div class="col-md-4">
-					<h3>${book.name}</h3>
-					<p>${book.author}</p>
-					${book.publisher} | ${book.releaseDate}
-					<p align=left>${fn:substring(book.description, 0, 100)}...</p>
-					<p>${book.unitPrice}원</p>
-					<p><a href="/spring_BookMarket/books/book?id=${book.bookId}" class="btn btn-secondary" role="button">상세정보 &raquo;</a></p>
+			<%
+				if(book.getBookImage() == null){	
+			%>
+					<img src="/spring_BookMarket/resources/images/<%= book.getBookId() %>.png" style="width: 60%;">
+			<%					
+				} else {
+			%>
+					<img src="/spring_BookMarket/resources/images/<%= book.getBookImage().getOriginalFilename() %>" style="width: 60%;">
+			<%
+				}
+			%>
+					<h3><%= book.getName() %></h3>
+					<p><%= book.getAuthor() %></p>
+					<%= book.getPublisher() %> | <%= book.getReleaseDate() %>
+					<p align=left><%= book.getDescription().substring(0,60) %>...</p>
+					<p><%= book.getUnitPrice() %>원</p>
+					<p><a href="/spring_BookMarket/books/book?id=<%= book.getBookId() %>" class="btn btn-secondary" role="button">상세정보 &raquo;</a></p>
 				</div>
-			</c:forEach>
+				
+			<%
+				}
+			%>
 		</div>
 
 		<footer class="container">
