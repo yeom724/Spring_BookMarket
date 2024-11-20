@@ -53,7 +53,7 @@
 					<h3><%= book.getName() %></h3>
 					<p><%= book.getAuthor() %></p>
 					<%= book.getPublisher() %> | <%= book.getReleaseDate() %>
-					<p align=left><%= book.getDescription().substring(0,60) %>...</p>
+					<p align=left><%= book.getDescription() %>...</p>
 					<p><%= book.getUnitPrice() %>원</p>
 					<p><a href="/spring_BookMarket/books/book?id=<%= book.getBookId() %>" class="btn btn-secondary" role="button">상세정보 &raquo;</a></p>
 				</div>

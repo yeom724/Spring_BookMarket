@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.MatrixVariable;
@@ -25,6 +26,8 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.springmvc.domain.Book;
+import com.springmvc.exception.BookIdException;
+import com.springmvc.exception.CategoryException;
 import com.springmvc.service.BookService;
 
 // 컨트롤 객체, 디스패처 서블렛이 미리 생성할 수 있도록 지정함
@@ -77,6 +80,15 @@ public class BookController {
 	public String requestBookByCategory(@PathVariable String category, Model model) {
 		System.out.println(category + " 입력한 정보를 추출하러 이동중...");
 		List<Book> booksByCategory = bookService.getBookListByCategory(category);
+		
+		System.out.println("도서 정보가 빈 값인지 확인중...");
+		if(booksByCategory == null || booksByCategory.isEmpty()) {
+			System.out.println("도서 정보가 없습니다.");
+			throw new CategoryException();
+			
+			//null 	= 공백도 포함
+			//Empty = 공백 미포함, 아예 존재하지 않음
+		}
 		model.addAttribute("bookList", booksByCategory);
 		
 		System.out.println("정보 도착, 반환 시작.");
@@ -155,5 +167,24 @@ public class BookController {
 	public void initBinder(WebDataBinder binder) {
 		binder.setAllowedFields("bookId","name","unitPrice","author","description","publisher","category",
 				"unitsInStock","totalPages","releaseDate","condition","bookImage");
+	}
+	
+	@ExceptionHandler(value = {BookIdException.class})
+	public ModelAndView handleError(HttpServletRequest req, BookIdException exception) {
+		
+		System.out.println("도서를 찾을 수 없습니다.");
+		
+		ModelAndView mav= new ModelAndView();
+		mav.addObject("invalidBookId", exception.getBookId());
+		mav.addObject("exception", exception);
+		System.out.println("Exception객체는 무얼 받아오나요? "+exception);
+		mav.addObject("url", req.getRequestURL() + "?" + req.getQueryString());
+		System.out.println(req.getRequestURL() + "?" + req.getQueryString());
+		mav.setViewName("errorBook");
+		
+		System.out.println("에러페이지 전송합니다.");
+		
+		return mav;
+		
 	}
 }

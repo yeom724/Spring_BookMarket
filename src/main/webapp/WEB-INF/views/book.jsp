@@ -48,16 +48,16 @@
 			</div>
 		
 			<div class="col-md-8">
-				<h3>${book.name}</h3>
-				<p>${book.description}</p>
+				<h3> <%= book.getName() %> </h3>
+				<p><%= book.getDescription() %></p>
 				<br>
-				<p><b>도서코드 : </b><span class="badge badge-info">${book.bookId}</span></p>
-				<p><b>저자 : </b>${book.author}</p>
-				<p><b>출판사 : </b>${book.publisher}</p>
-				<p><b>출판일 : </b>${book.releaseDate}</p>
-				<p><b>분류 : </b>${book.category}</p>
-				<p><b>재고수 : </b>${book.unitsInStock}</p>
-				<h4>${book.unitPrice}원</h4>
+				<p><b>도서코드 : </b><span class="badge badge-info"><%= book.getBookId() %></span></p>
+				<p><b>저자 : </b> <%= book.getAuthor() %> </p>
+				<p><b>출판사 : </b> <%= book.getPublisher() %> </p>
+				<p><b>출판일 : </b> <%= book.getReleaseDate() %> </p>
+				<p><b>분류 : </b> <%= book.getCategory() %> </p>
+				<p><b>재고수 : </b> <%= book.getUnitsInStock() %></p>
+				<h4><%= book.getUnitPrice() %>원</h4>
 				<br>
 				<p>	<a href="#" class="btn btn-primary">도서주문 &raquo;</a>
 					<a href="/spring_BookMarket/books/all" class="btn btn-secondary">도서목록 &raquo;</a>

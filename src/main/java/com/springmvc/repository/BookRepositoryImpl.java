@@ -9,6 +9,7 @@ import java.util.Set;
 import org.springframework.stereotype.Repository;
 
 import com.springmvc.domain.Book;
+import com.springmvc.exception.BookIdException;
 
 // 레파지토리 지정하여 미리 생성될 수 있도록 함
 // 이렇게 생성된 객체는 모두 자동적으로 static(유일한 하나의 객체)이 되기 때문에 별도 생성자로 생성하지 않은 것을 확인할 수 있다.
@@ -156,7 +157,8 @@ public class BookRepositoryImpl implements BookRepository {
 		}
 		
 		if(bookInfo == null) {
-			throw new IllegalArgumentException("도서 ID가" + BookId + "인 해당 도서를 찾을 수 없습니다.");
+			System.out.println("해당 도서를 발견할 수 없었습니다.");
+			throw new BookIdException(BookId);
 		}
 		
 		System.out.println("서비스로 넘어갑니다...");

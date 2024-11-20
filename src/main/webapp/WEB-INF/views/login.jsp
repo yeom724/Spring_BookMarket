@@ -31,8 +31,8 @@
 		</div>
 		
 		<%
-			Boolean error = (Boolean)request.getAttribute("error");
-			//String error = (String)request.getAttribute("error");
+			//Boolean error = (Boolean)request.getAttribute("error");
+			String error = (String)request.getAttribute("error");
 			// String으로 받은 이유는 로그인에 실패 했을 때만 ture값을 받아오고, 성공했을 때는 null을 받아오기 때문이다.
 			// 따라서 Stirng으로 제어문에 사용하려면 != null 로 해당 참조객체가 null인지 아닌지로 판단해야 한다.
 			
@@ -44,7 +44,7 @@
 			// 불린 형변환은 null값도 false로 자동 치환해준다고 한다. 강제형변환으로는 못하는 듯?
 			// 애초 리퀘스트에서 받을 때부터 강제형변환이 적용되지 않는 이유는 Boolean객체 자체는 true와 false만 받기 때문이다.
 			
-			if(error){
+			if(error != null){
 		%>
 			<div class="alert alert-danger">
 				UserName과 Password가 올바르지 않습니다. <br>
