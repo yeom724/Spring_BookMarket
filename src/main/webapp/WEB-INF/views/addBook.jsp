@@ -36,7 +36,7 @@
 		</div>
 		
 		<div class="float-right" style="padding-right:30px;">
-			<a href="?language=ko">한국어</a> | <a href="?language=en">English</a>
+			<a href="?lang=ko">한국어</a> | <a href="?lang=en">English</a>
 		</div>
 		<form:form modelAttribute="NewBook" class="form-horizontal" enctype="multipart/form-data" action="add?${_csrf.parameterName }=${_csrf.token }" >
 			<fieldset>
@@ -46,6 +46,9 @@
 					<div class="col-sm-3">
 						<form:input path="bookId" class="form-control"/>
 					</div>
+					<div class="col-sm-6">
+						<form:errors path="bookId" cssClass="text-danger"></form:errors>
+					</div>
 				</div>
 				
 				<div class="form-group row">
@@ -53,12 +56,18 @@
 					<div class="col-sm-3">
 						<form:input path="name" class="form-control"/>
 					</div>
+					<div class="col-sm-6">
+						<form:errors path="name" cssClass="text-danger"></form:errors>
+					</div>
 				</div>
 				
 				<div class="form-group row">
 					<label class="col-sm-2 control-label"><spring:message code="unitPrice.label" /></label>
 					<div class="col-sm-3">
 						<form:input path="unitPrice" class="form-control"/>
+					</div>
+					<div class="col-sm-6">
+						<form:errors path="unitPrice" cssClass="text-danger"></form:errors>
 					</div>
 				</div>
 						
@@ -94,6 +103,9 @@
 					<label class="col-sm-2 control-label"><spring:message code="unitsInStock.label" /></label>
 					<div class="col-sm-3">
 						<form:input path="unitsInStock" class="form-control"/>
+					</div>
+					<div class="col-sm-6">
+						<form:errors path="unitsInStock" cssClass="text-danger"></form:errors>
 					</div>
 				</div>
 				

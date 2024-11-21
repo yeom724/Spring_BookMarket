@@ -9,8 +9,9 @@
 
 	<!-- DispatcherServlet Context: defines this servlet's request-processing infrastructure -->
 	
+	<!-- 매트릭스 변수 사용 지정 -->
 	<!-- 핸들러 매핑과 핸들러 어댑터를 자동으로 객체 생성함 -->
-	<annotation-driven />
+	<annotation-driven enable-matrix-variables="true" validator="validator" />
 
 	<!-- css, imgge, js와 같은 공유되는 파일의 위치를 정하고 MVC의 처리를 실시함 -->
 	<resources mapping="/resources/**" location="/resources/" />
@@ -34,19 +35,33 @@
 	<beans:bean id="localeResolver" class="org.springframework.web.servlet.i18n.SessionLocaleResolver">
 		<beans:property name="defaultLocale" value="ko"></beans:property>
 	</beans:bean>
+	<!-- 로케일 언어 ko로 저장해두었음 -->
+	
+	<!-- 유효성 검사를 위한 객체 등록 -->
+	<beans:bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean">
+	    <beans:property name="validationMessageSource" ref="messageSource"/>
+	</beans:bean>
+	
+	<beans:bean id="unitsInStockValidator" class="com.springmvc.validator.UnitsInStockValidator"></beans:bean>
+	
+	<beans:bean id="bookValidator" class="com.springmvc.validator.BookValidator">
+		<beans:property name="springValidators">
+			<beans:set>
+				<beans:ref bean="unitsInStockValidator"/>
+			</beans:set>
+		</beans:property>
+	</beans:bean>
 	
 	<!-- com.springmvc.* 이라고 표시하면 해당 패키지의 모든 클래스의 객체를 만들어서 보관 중-->
 	<context:component-scan base-package="com.springmvc.*" />
-	
-	<annotation-driven enable-matrix-variables="true"></annotation-driven>
-	<!-- 매트릭스 변수 사용 지정 -->
 	
 	<!-- 두개 작성하면 에러남 -->
 	<interceptors>
 		<beans:bean class="com.springmvc.interceptor.MonitoringInterceptor"></beans:bean>
 		<beans:bean class="com.springmvc.interceptor.AuditingInterceptor"></beans:bean>
+		<!-- 로케일 언어 변경, value가 뷰에서 보내는 파라미터 ID임 -->
 		<beans:bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
-			<beans:property name="paramName" value="language"></beans:property>
+			<beans:property name="paramName" value="lang"></beans:property>
 		</beans:bean>
 	</interceptors>
 	

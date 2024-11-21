@@ -23,9 +23,7 @@ public class MonitoringInterceptor implements HandlerInterceptor{
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
-		
-		System.out.println("preHandle()입장");
-		
+
 		StopWatch stopWatch = new StopWatch(handler.toString());
 		stopWatch.start(handler.toString());
 		stopWatchLocal.set(stopWatch);
@@ -38,7 +36,6 @@ public class MonitoringInterceptor implements HandlerInterceptor{
 
 	private String getCurrentTime() {
 		// TODO Auto-generated method stub
-		System.out.println("getCurrentTime() 입장");
 		DateFormat formatter = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 		
 		Calendar calendar = Calendar.getInstance();
@@ -49,8 +46,7 @@ public class MonitoringInterceptor implements HandlerInterceptor{
 
 	private String getURLPath(HttpServletRequest request) {
 		// TODO Auto-generated method stub
-		
-		System.out.println("getURLPath() 입장");
+
 		String currentPath = request.getRequestURI();
 		String queryString = request.getQueryString();
 		queryString = queryString == null ? "" : "?" + queryString;

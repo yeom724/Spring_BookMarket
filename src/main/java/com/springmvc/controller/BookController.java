@@ -6,21 +6,21 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.MatrixVariable;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
@@ -29,6 +29,7 @@ import com.springmvc.domain.Book;
 import com.springmvc.exception.BookIdException;
 import com.springmvc.exception.CategoryException;
 import com.springmvc.service.BookService;
+import com.springmvc.validator.BookValidator;
 
 // 컨트롤 객체, 디스패처 서블렛이 미리 생성할 수 있도록 지정함
 @Controller
@@ -40,6 +41,10 @@ public class BookController {
 	// BookService를 사용하기 위해서는 해당 객체도 미리 컴포너트 스캔이 되어있어야 한다.
 	@Autowired
 	private BookService bookService;
+	
+	@Autowired
+	//@Qualifier("bookValidator")
+	private BookValidator bookValidator;
 	
 	//클래스에 매핑되면 기본값으로 호출될 함수 위에 @RequestMapping을 표시해준다. (아무런 밸류값을 주지 않으면)
 	@GetMapping
@@ -130,10 +135,16 @@ public class BookController {
 	}
 	
 	@PostMapping("/add")
-	public String submitAddNewBook(@ModelAttribute("NewBook") Book book, HttpServletRequest req) {
+	public String submitAddNewBook(@Valid @ModelAttribute("NewBook") Book book, BindingResult result, HttpServletRequest req ) {
+		//@Vaild - result 순서 바뀌면 안됨... requeset가 바로 와서 오류났을 때 req를 들고 가서 에러가 난 듯?
+		if(result.hasErrors()) { return "addBook"; }
+		//유효성 검사에 감지되면 messages.properties에 작성된 오류 문구가 작동함
+		
+		String[] suppressedFields = result.getSuppressedFields();
+		
 		System.out.println("도서 추가를 시작합니다.");
 		//여기서 파라미터를 보내는 생성자를 쓰는 것이 아니라, book() 기본 생성자를 사용하기 때문에 해당 기본 생성자가 존재해야 한다.
-		
+
 		MultipartFile bookImage = book.getBookImage();
 		
 		String save = req.getServletContext().getRealPath("resources/images");
@@ -165,6 +176,7 @@ public class BookController {
 	
 	@InitBinder
 	public void initBinder(WebDataBinder binder) {
+		binder.setValidator(bookValidator);
 		binder.setAllowedFields("bookId","name","unitPrice","author","description","publisher","category",
 				"unitsInStock","totalPages","releaseDate","condition","bookImage");
 	}
