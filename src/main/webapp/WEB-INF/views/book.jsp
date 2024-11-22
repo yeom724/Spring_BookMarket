@@ -1,7 +1,7 @@
 <%@page import="com.springmvc.domain.Book"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-        
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
@@ -59,9 +59,12 @@
 				<p><b>재고수 : </b> <%= book.getUnitsInStock() %></p>
 				<h4><%= book.getUnitPrice() %>원</h4>
 				<br>
-				<p>	<a href="#" class="btn btn-primary">도서주문 &raquo;</a>
-					<a href="/spring_BookMarket/books/all" class="btn btn-secondary">도서목록 &raquo;</a>
-				</p>
+				<form:form name="addForm" method="put">
+					<p>	<a href="#" onclick="addToCart('/spring_BookMarket/cart/add/<%= book.getBookId() %>')" class="btn btn-primary">도서주문 &raquo;</a>
+						<a href="/spring_BookMarket/cart" class="btn btn-warning">장바구니 &raquo;</a>
+						<a href="/spring_BookMarket/books/all" class="btn btn-secondary">도서목록 &raquo;</a>
+					</p>
+				</form:form>
 			</div>
 		</div>
 		<footer class="container">
@@ -70,4 +73,5 @@
 		</footer>
 	</div>
 </body>
+<script src="/spring_BookMarket/resources/js/controllers.js"></script>
 </html>

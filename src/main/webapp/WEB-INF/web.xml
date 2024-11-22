@@ -62,4 +62,13 @@
    </filter-mapping>
    <!-- 필터기능 -->
    
+   <filter>
+   		<filter-name>httpMethodFilter</filter-name>
+   		<filter-class>org.springframework.web.filter.HiddenHttpMethodFilter</filter-class>
+   </filter>
+   <filter-mapping>
+   		<filter-name>httpMethodFilter</filter-name>
+   		<servlet-name>appServlet</servlet-name>
+   </filter-mapping>
+   <!-- 장바구니 -->
 </web-app>

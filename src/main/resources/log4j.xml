@@ -4,12 +4,14 @@
 	
 	<!-- 가장 먼저 어펜더를 작성 -->
 	<!-- Appenders -->
-	<appender name="console" class="org.apache.log4j.ConsoleAppender"> <!-- 콘솔에 출력 -->
+	<!-- 콘솔에 출력 -->
+<!-- 	<appender name="console" class="org.apache.log4j.ConsoleAppender"> 
 		<param name="Target" value="System.out" />
 		<layout class="org.apache.log4j.PatternLayout">
 			<param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss} %-5p%c{1}:%L - %m%n" />
-		</layout> <!-- 로그 출력의 구조를 담당 -->
-	</appender>
+		</layout> 
+	</appender>  -->
+	<!-- 로그 출력의 구조를 담당 -->
 	
 	<!-- 파일에 출력하기 -->
 	<appender name="monitor" class="org.apache.log4j.RollingFileAppender">
