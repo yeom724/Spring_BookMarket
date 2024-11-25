@@ -27,6 +27,7 @@
 	<% 	
 		Cart cart = null;
 		Map<String, CartItem> cartList = null;
+		
 		String userId = request.getSession().getId();
 		
 		if(request.getAttribute("cart") != null){
