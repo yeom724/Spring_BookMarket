@@ -1,8 +1,11 @@
 package com.springmvc.domain;
 
-import java.util.Objects;
+import java.io.Serializable;
 
-public class CartItem {
+public class CartItem implements Serializable{
+	
+	private static final long serialVersionUID = -2220274791589791282L;
+	
 	private Book book;
 	private int quantity;
 	private int totalPrice;

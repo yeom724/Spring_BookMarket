@@ -3,9 +3,12 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:beans="http://www.springframework.org/schema/beans"
 	xmlns:context="http://www.springframework.org/schema/context"
-	xsi:schemaLocation="http://www.springframework.org/schema/mvc https://www.springframework.org/schema/mvc/spring-mvc.xsd
-		http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
-		http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">
+	xmlns:webflow="http://www.springframework.org/schema/webflow-config"
+    xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+      http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+      http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+      http://www.springframework.org/schema/webflow-config http://www.springframework.org/schema/webflow-config/spring-webflow-config.xsd">
+
 
 	<!-- DispatcherServlet Context: defines this servlet's request-processing infrastructure -->
 	
@@ -64,5 +67,24 @@
 			<beans:property name="paramName" value="lang"></beans:property>
 		</beans:bean>
 	</interceptors>
+	
+	<!-- webflow -->
+	<!-- 시나리오 위치를 확인 (핸들러 매핑 역할) id가 url주소 -->
+	<webflow:flow-registry id="flowRegistry">
+		<webflow:flow-location path="/WEB-INF/flows/order/order-flow.xml" id="order"></webflow:flow-location>
+	</webflow:flow-registry>
+	
+	<!-- 시나리오를 참조하여 해당 위치에서 가져옴 (핸들러 어댑터 역할) -->
+	<webflow:flow-executor id="flowExecutor" flow-registry="flowRegistry"></webflow:flow-executor>
+	
+	<!-- 시나리오를 참조 -->
+	<beans:bean id="flowHandlerMapping" class="org.springframework.webflow.mvc.servlet.FlowHandlerMapping">
+		<beans:property name="flowRegistry" ref="flowRegistry"></beans:property>
+	</beans:bean>
+	
+	<!-- 어댑터를 참조 -->
+	<beans:bean id="flowHandlerAdapter" class="org.springframework.webflow.mvc.servlet.FlowHandlerAdapter">
+		<beans:property name="flowExecutor" ref="flowExecutor"></beans:property>
+	</beans:bean>
 	
 </beans:beans>

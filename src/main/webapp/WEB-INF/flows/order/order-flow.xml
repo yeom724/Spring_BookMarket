@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+     xsi:schemaLocation=" http://www.springframework.org/schema/webflow http://www.springframework.org/schema/webflow/spring-webflow.xsd ">
+     
+     
+	<var name="order" class="com.springmvc.domain.Order"/>
+	
+	<!-- addCartToOrder : 서비스 함수실행 후 orderCartWarning(예외) / orderCustomerInfo -->
+	<action-state id="addCartToOrder">
+		<evaluate expression="cartServiceImpl.validateCart(requestParameters.cartId)" result="order.cart"></evaluate>
+		<transition to="orderCartWarning" on-exception="com.springmvc.exception.CartException"></transition>
+		<transition to="orderCustomerInfo"></transition>
+	</action-state>
+	
+	
+	<!-- orderCustomerInfo : order변수 들고 customerInfo이벤트 발생 시 orderShippingInfo 이동 -->
+	<view-state id="orderCustomerInfo" model="order">
+		<transition on="customerInfo" to="orderShippingInfo"></transition>
+	</view-state>
+	
+	<!-- orderShippingInfo : order변수 들고 shippingInfo이벤트 발생 시 orderConfirmation 이동 -->
+	<view-state id="orderShippingInfo" model="order">
+		<transition on="shippingInfo" to="orderConfirmation"></transition>
+		<transition on="backToCustomerInfo" to="orderCustomerInfo"></transition>
+	</view-state>
+	
+	<view-state id="orderConfirmation">
+		<transition on="orderConfirmed" to="confirmOrder"></transition>
+		<transition on="backToShippingInfo" to="orderShippingInfo"></transition>
+	</view-state>
+	
+	<action-state id="confirmOrder">
+		<evaluate expression="orderServiceImpl.saveOrder(order)" result="order.orderId"></evaluate>
+		<transition to="orderFinished"></transition>
+	</action-state>
+	
+	<view-state id="orderCartWarning">
+		<transition to="endState"></transition>
+	</view-state>
+	
+	<view-state id="orderFinished" model="order">
+		<transition to="endState"></transition>
+	</view-state>
+	
+	<end-state id="endState"></end-state>
+	
+	<end-state id="orderCancelled" view="orderCartWarning.jsp"></end-state>
+	
+	<global-transitions>
+		<transition on="cancel" to="endState"></transition>
+	</global-transitions>
+	
+</flow>
