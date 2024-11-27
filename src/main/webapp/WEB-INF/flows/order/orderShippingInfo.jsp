@@ -10,23 +10,7 @@
 <link href="/spring_BookMarket/resources/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-	<nav class="navbar navbar-expand navbar-dark bg-dark">
-		<div class="container">
-			<div class="navbar-header">
-				<a class="navbar-brand" href="/spring_BookMarket/">Home</a>
-				<a class="navbar-brand" href="/spring_BookMarket/books">Books</a>
-				<a class="navbar-brand" href="/spring_BookMarket/books/all">All</a>
-				<a class="navbar-brand" href="/spring_BookMarket/books/add">NewBook</a>
-			</div>
-		</div>
-	</nav>
-	
-	<div class="jumbotron">
-		<div class="container">
-			<h1 class="display-3"> 배송정보 </h1>
-		</div>
-	</div>
-	
+
 	<div class="container">
 		<form:form modelAttribute="order.shipping" class="form-horizontal">
 			<fieldset>

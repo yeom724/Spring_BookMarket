@@ -157,6 +157,7 @@ public class BookController {
 			try {
 				System.out.println("도서 이미지 파일 처리중입니다.");
 				bookImage.transferTo(saveFile);
+				book.setFileName(saveName);
 				
 			} catch(Exception e) { throw new RuntimeException("도서 이미지 업로드가 실패하였습니다.", e); }
 			
@@ -198,5 +199,40 @@ public class BookController {
 		
 		return mav;
 		
+	}
+	
+	@GetMapping("/update")
+	public String getUpdateBookForm(@ModelAttribute("updateBook") Book book, @RequestParam("id") String bookId, Model model) {
+		System.out.println("업데이트 할 도서 정보를 가져옵니다.");
+		Book bookById = bookService.getBookById(bookId);
+		model.addAttribute("book", bookById);
+		
+		return "updateForm";
+	}
+	
+	@PostMapping("/update")
+	public String submitUpdateBookForm(@ModelAttribute("updateBook") Book book, HttpServletRequest req) {
+		System.out.println("업데이트 정보가 컨트롤러에 도착하였습니다.");
+		
+		MultipartFile bookImage = book.getBookImage();
+		String save = req.getServletContext().getRealPath("resources/images");
+		
+		if(bookImage != null && (bookImage.isEmpty())) {
+			try {
+				
+				String fname = bookImage.getOriginalFilename();
+				bookImage.transferTo(new File(save+"/"+fname));
+				book.setFileName(fname);
+				
+			} catch(Exception e) {
+				throw new RuntimeException("Book Image saving failed", e);
+			}
+			
+		}
+		
+		bookService.setUpdateBook(book);
+		System.out.println("도서 수정을 완료했습니다. 전체 목록으로 돌아갑니다.");
+		
+		return "redirect:/books";
 	}
 }

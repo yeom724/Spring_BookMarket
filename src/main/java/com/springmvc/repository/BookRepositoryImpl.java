@@ -6,6 +6,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.sql.DataSource;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.springmvc.domain.Book;
@@ -16,7 +20,14 @@ import com.springmvc.exception.BookIdException;
 @Repository
 public class BookRepositoryImpl implements BookRepository {
 
-	private List<Book> listOfBooks = new ArrayList<Book>();
+	private List<Book> listOfBook = new ArrayList<Book>();
+	
+	private JdbcTemplate template;
+	
+	@Autowired //dataSource에 주입하여 함수실행
+	public void setJdbctemplate(DataSource dataSource) {
+		this.template = new JdbcTemplate(dataSource);
+	}
 	
 	public BookRepositoryImpl() { 
 		
@@ -46,9 +57,9 @@ public class BookRepositoryImpl implements BookRepository {
 	        book3.setUnitsInStock(1000);
 	        book3.setReleaseDate("2019/05/29");
 
-	        listOfBooks.add(book1);
-	        listOfBooks.add(book2);
-	        listOfBooks.add(book3);
+	        listOfBook.add(book1);
+	        listOfBook.add(book2);
+	        listOfBook.add(book3);
 	        
 	    }
 	
@@ -56,6 +67,10 @@ public class BookRepositoryImpl implements BookRepository {
 	@Override
 	public List<Book> getAllBookList() {
 		// TODO Auto-generated method stub
+		System.out.println("전체 목록을 반환하기 위한 SQL문 작성 중...");
+		String SQL = "SELECT * FROM book";
+		List<Book> listOfBooks = template.query(SQL, new BookRowMapper());
+		
 		System.out.println("책 목록 서비스에 전달중...");
 		return listOfBooks;
 	}
@@ -64,15 +79,8 @@ public class BookRepositoryImpl implements BookRepository {
 		System.out.println("카테고리별 책을 추출합니다.");
 		List<Book> bookByCategory = new ArrayList<Book>();
 		
-		for(int i = 0; i<listOfBooks.size(); i++) {
-			Book book = listOfBooks.get(i);
-			
-			if(category.equalsIgnoreCase(book.getCategory())) {
-				bookByCategory.add(book);
-				System.out.println(category + " 발견!");
-			}
-			
-		}
+		String SQL = "select * from book where b_category LIKE '%" + category + "%'";
+		bookByCategory = template.query(SQL, new BookRowMapper());
 		
 		System.out.println("서비스로 책을 보내는 중...");
 		return bookByCategory;
@@ -86,11 +94,11 @@ public class BookRepositoryImpl implements BookRepository {
 		System.out.println("필터 검색에 도착하셨습니다...");
 		Set<Book> booksByPublisher = new HashSet<Book>();
 		Set<Book> booksByCategory = new HashSet<Book>();
-		
-		Set<String> booksByFilter = filter.keySet();
+		Set<String> criterias = filter.keySet();
 		// 가져온 Set에서 키만 가져온다, 키 값은 String으로 저장되어 있기 때문에 String형식으로 받는다.
 		
-		if(booksByFilter.contains("publisher")) {
+		
+		if(criterias.contains("publisher")) {
 			System.out.println("publisher if문 진입");
 			
 			//filter.get("publisher").size() publisher key가 있는지 확인하고 그 크기를 계산하여 반영됨
@@ -99,13 +107,10 @@ public class BookRepositoryImpl implements BookRepository {
 				String publisherName = filter.get("publisher").get(j);
 				System.out.println("publisher 검색어 : " + publisherName);
 				
-				for(int i = 0; i < listOfBooks.size(); i++) {
-					Book book = listOfBooks.get(i);
-					
-					if(publisherName.equalsIgnoreCase(book.getPublisher())) {
-						booksByPublisher.add(book);
-					}
-				}
+				String SQL = "select * from book where b_publisher LIKE '%"+publisherName+"%'";
+				
+				booksByPublisher.addAll(template.query(SQL, new BookRowMapper()));
+				System.out.println("SQL에서 데이터 확보 완료 - publisher");
 				
 			}
 			
@@ -113,7 +118,7 @@ public class BookRepositoryImpl implements BookRepository {
 			
 		}
 		
-		if(booksByFilter.contains("category")) {
+		if(criterias.contains("category")) {
 			System.out.println("category if문 진입");
 			
 			for(int i = 0; i<filter.get("category").size(); i++) {
@@ -121,9 +126,10 @@ public class BookRepositoryImpl implements BookRepository {
 				String category = filter.get("category").get(i);
 				System.out.println(i+"번째 category"+category);
 				
-				List<Book> list = getBookListByCategory(category);
+				String SQL = "select * from book where b_category LIKE '%"+category+"%'";
 				
-				booksByCategory.addAll(list);
+				booksByCategory.addAll(template.query(SQL, new BookRowMapper()));
+				System.out.println("SQL에서 데이터 확보 완료 - Category");
 			}
 			
 			System.out.println("Category - 책 정보 저장에 성공했습니다.");
@@ -144,16 +150,13 @@ public class BookRepositoryImpl implements BookRepository {
 		
 		Book bookInfo = null;
 		
-		for(int i=0; i<listOfBooks.size(); i++) {
+		String SQL = "select count(*) from book where b_bookId=?";
+		int rowCount = template.queryForObject(SQL, Integer.class, BookId);
+		
+		if(rowCount != 0) {
+			SQL = "select * from book where b_bookId=?";
 			
-			Book book = listOfBooks.get(i);
-			
-			if(book != null && book.getBookId() != null && book.getBookId().equals(BookId)) {
-				bookInfo = book;
-				System.out.println("해당 도서 발견!");
-				break;
-			}
-			
+			bookInfo = template.queryForObject(SQL, new Object[] { BookId }, new BookRowMapper());
 		}
 		
 		if(bookInfo == null) {
@@ -170,7 +173,27 @@ public class BookRepositoryImpl implements BookRepository {
 	public void setNewBook(Book book) {
 		// TODO Auto-generated method stub
 		System.out.println("레파지토리 도착, book 정보를 저장합니다.");
-		listOfBooks.add(book);
+		
+		String SQL = "insert into book values (?,?,?,?,?,?,?,?,?,?,?)";
+		
+		template.update(SQL, book.getBookId(), book.getName(), book.getUnitPrice(), book.getAuthor(), book.getDescription(), book.getPublisher(), book.getCategory(), book.getUnitsInStock(), book.getReleaseDate(), book.getCondition(), book.getFileName());
+		
+	}
+
+	@Override
+	public void setUpdateBook(Book book) {
+		
+		System.out.println("도서 정보를 수정합니다.");
+		String SQL = "update book set b_name=?, b_unitPrice=?, b_author=?, b_description=?, b_publisher=?, b_category=?, b_unitsInStock=?, b_releaseDate=?, b_condition=? where b_bookId=?";
+		template.update(SQL, book.getName(), book.getUnitPrice(), book.getAuthor(), book.getDescription(), book.getPublisher(), book.getCategory(), book.getUnitsInStock(), book.getReleaseDate(), book.getCondition());
+		
+		
+		if(book.getFileName() != null) {
+			System.out.println("도서 이미지를 수정합니다.");
+			SQL = "update book set b_fileName=? where b_bookId=?";
+			template.update(SQL, book.getFileName());
+			
+		}
 		
 	}
 

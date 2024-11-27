@@ -4,6 +4,7 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -12,22 +13,6 @@
 <title>Insert title here</title>
 </head>
 <body>
-	<nav class="navbar navbar-expand navbar-dark bg-dark">
-		<div class="container">
-			<div class="navbar-header">
-				<a class="navbar-brand" href="/spring_BookMarket/">Home</a>
-				<a class="navbar-brand" href="/spring_BookMarket/books">Books</a>
-				<a class="navbar-brand" href="/spring_BookMarket/books/all">All</a>
-				<a class="navbar-brand" href="/spring_BookMarket/books/add">NewBook</a>
-			</div>
-		</div>
-	</nav>
-	
-	<div class="jumbotron">
-		<div class="container">
-			<h1 class="display-3">도서 정보</h1>
-		</div>
-	</div>
 	
 	<div class="container">
 		<div class="row">
@@ -41,7 +26,7 @@
 				<%
 					} else {
 				%>
-						<img src="/spring_BookMarket/resources/images/<%= book.getBookImage().getOriginalFilename() %>" style="width: 60%;">
+						<img src="/spring_BookMarket/resources/images/<%= book.getFileName() %>" style="width: 60%;">
 				<%
 					}
 				%>
@@ -63,14 +48,13 @@
 					<p>	<a href="#" onclick="addToCart('/spring_BookMarket/cart/add/<%= book.getBookId() %>')" class="btn btn-primary">도서주문 &raquo;</a>
 						<a href="/spring_BookMarket/cart" class="btn btn-warning">장바구니 &raquo;</a>
 						<a href="/spring_BookMarket/books/all" class="btn btn-secondary">도서목록 &raquo;</a>
+						<sec:authorize access="isAuthenicated()">
+							<a href="/spring_BookMarket/update?=<%=book.getBookId()%>" class="btn btn-success">수정 &raquo;</a>
+						</sec:authorize>
 					</p>
 				</form:form>
 			</div>
 		</div>
-		<footer class="container">
-			<hr>
-			<p>&copy; WebMarket</p>
-		</footer>
 	</div>
 </body>
 <script src="/spring_BookMarket/resources/js/controllers.js"></script>

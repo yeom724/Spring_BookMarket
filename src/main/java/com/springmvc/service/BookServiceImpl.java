@@ -57,4 +57,12 @@ public class BookServiceImpl implements BookService {
 		bookRepository.setNewBook(book);
 	}
 
+	@Override
+	public void setUpdateBook(Book book) {
+		// TODO Auto-generated method stub
+		System.out.println("서비스에서 도서 정보 수정사항 전달하는 중...");
+		bookRepository.setUpdateBook(book);
+		
+	}
+
 }

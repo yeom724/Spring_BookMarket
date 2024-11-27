@@ -11,30 +11,14 @@
 <link href="/spring_BookMarket/resources/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-	<nav class="navbar navbar-expand navbar-dark bg-dark">
-		<div class="container">
-			<div class="navbar-header">
-				<a class="navbar-brand" href="/spring_BookMarket/">Home</a>
-				<a class="navbar-brand" href="/spring_BookMarket/books">Books</a>
-				<a class="navbar-brand" href="/spring_BookMarket/books/all">All</a>
-				<a class="navbar-brand" href="/spring_BookMarket/books/add">NewBook</a>
-			</div>
-		</div>
-	</nav>
-	
-	<div class="jumbotron">
-		<div class="container">
-			<h1 class="display-3"> <spring:message code="title.label" /> </h1>
-		</div>
-	</div>
 	
 	<div class="container">
-		<div class="float-right">
+<!--	<div class="float-right">
 			<form:form action="/spring_BookMarket/logout" method="post">
 				<input type="submit" class="btn btn-success" value="Logout">
 			</form:form>
 		</div>
-		
+ -->
 		<div class="float-right" style="padding-right:30px;">
 			<a href="?lang=ko">한국어</a> | <a href="?lang=en">English</a>
 		</div>
@@ -139,11 +123,6 @@
 				</div>
 			</fieldset>
 		</form:form>
-		
-		<footer class="container">
-		<hr>
-		<p>&copy; WebMarket</p>
-	</footer>
 	</div>
 </body>
 </html>

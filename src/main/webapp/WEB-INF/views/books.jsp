@@ -13,22 +13,6 @@
 <title>Insert title here</title>
 </head>
 <body>
-	<nav class="navbar navbar-expand navbar-dark bg-dark">
-		<div class="container">
-			<div class="navbar-header">
-				<a class="navbar-brand" href="/spring_BookMarket/">Home</a>
-				<a class="navbar-brand" href="/spring_BookMarket/books">Books</a>
-				<a class="navbar-brand" href="/spring_BookMarket/books/all">All</a>
-				<a class="navbar-brand" href="/spring_BookMarket/books/add">NewBook</a>
-			</div>
-		</div>
-	</nav>
-	
-	<div class="jumbotron">
-		<div class="container">
-			<h1 class="dispaly-3">도서 목록</h1>
-		</div>
-	</div>
 	
 	<div class="container">
 		<div class="row" align="center">
@@ -40,13 +24,15 @@
 			%>
 				<div class="col-md-4">
 			<%
-				if(book.getBookImage() == null){	
+				if(book.getFileName() == null){
+					
 			%>
-					<img src="/spring_BookMarket/resources/images/<%= book.getBookId() %>.png" style="width: 60%;">
+					<p>파일이 없는뎅?</p>
+					<img src="<%= book.getBookId() %>" style="width: 60%;">
 			<%					
 				} else {
 			%>
-					<img src="/spring_BookMarket/resources/images/<%= book.getBookImage().getOriginalFilename() %>" style="width: 60%;">
+					<img src="/spring_BookMarket/resources/images/<%= book.getFileName() %>" style="width: 60%;">
 			<%
 				}
 			%>
@@ -63,10 +49,6 @@
 			%>
 		</div>
 
-		<footer class="container">
-			<hr>
-			<p>&copy; WebMarket</p>
-		</footer>
 	</div>
 </body>
 </html>

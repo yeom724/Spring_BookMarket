@@ -70,12 +70,19 @@
 	
 	<!-- webflow -->
 	<!-- 시나리오 위치를 확인 (핸들러 매핑 역할) id가 url주소 -->
-	<webflow:flow-registry id="flowRegistry">
+	<webflow:flow-registry id="flowRegistry" flow-builder-services="flowBuilderServices">
 		<webflow:flow-location path="/WEB-INF/flows/order/order-flow.xml" id="order"></webflow:flow-location>
 	</webflow:flow-registry>
 	
 	<!-- 시나리오를 참조하여 해당 위치에서 가져옴 (핸들러 어댑터 역할) -->
 	<webflow:flow-executor id="flowExecutor" flow-registry="flowRegistry"></webflow:flow-executor>
+	
+	<!-- webflow에 타일즈 적용 -->
+	<webflow:flow-builder-services id="flowBuilderServices" view-factory-creator="viewFactoryCreator"/>
+	
+	<beans:bean id="viewFactoryCreator" class="org.springframework.webflow.mvc.builder.MvcViewFactoryCreator">
+		<beans:property name="viewResolvers" ref="tilesViewResolver"></beans:property>
+	</beans:bean>
 	
 	<!-- 시나리오를 참조 -->
 	<beans:bean id="flowHandlerMapping" class="org.springframework.webflow.mvc.servlet.FlowHandlerMapping">
@@ -85,6 +92,28 @@
 	<!-- 어댑터를 참조 -->
 	<beans:bean id="flowHandlerAdapter" class="org.springframework.webflow.mvc.servlet.FlowHandlerAdapter">
 		<beans:property name="flowExecutor" ref="flowExecutor"></beans:property>
+	</beans:bean>
+	
+	<!-- 타일즈 뷰 리졸버, order = 1 제일 먼저 실행됨 -->
+	<beans:bean id="tilesViewResolver" class="org.springframework.web.servlet.view.UrlBasedViewResolver">
+		<beans:property name="viewClass" value="org.springframework.web.servlet.view.tiles3.TilesView"></beans:property>
+		<beans:property name="order" value="1"></beans:property>
+	</beans:bean>
+	
+	<beans:bean id="tilesConfigurer" class="org.springframework.web.servlet.view.tiles3.TilesConfigurer">
+		<beans:property name="definitions" value="/WEB-INF/tiles/tiles.xml"></beans:property>
+	</beans:bean>
+	
+	<!-- My SQL 드라이버 생성 -->
+	<beans:bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<beans:property name="driverClassName" value="com.mysql.cj.jdbc.Driver"></beans:property>
+		<beans:property name="url" value="jdbc:mysql://localhost:3306/springmvcDB?serverTimezone=UTC"></beans:property>
+		<beans:property name="username" value="root"></beans:property>
+		<beans:property name="password" value="1234"></beans:property>
+	</beans:bean>
+	
+	<beans:bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+		<beans:property name="dataSource" ref="dataSource"></beans:property>
 	</beans:bean>
 	
 </beans:beans>

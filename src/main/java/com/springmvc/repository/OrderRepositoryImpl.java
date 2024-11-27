@@ -32,6 +32,8 @@ public class OrderRepositoryImpl implements OrderRepository{
 	private synchronized Long getNextOrderId() {
 		// TODO Auto-generated method stub
 		System.out.println("nextOrderId 1 증가");
+		
+		
 		return nextOrderId++;
 	}
 

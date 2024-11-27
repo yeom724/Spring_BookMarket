@@ -13,16 +13,6 @@
 <title>Insert title here</title>
 </head>
 <body>
-	<nav class="navbar navbar-expand navbar-dark bg-dark">
-		<div class="container">
-			<div class="navbar-header">
-				<a class="navbar-brand" href="/spring_BookMarket/">Home</a>
-				<a class="navbar-brand" href="/spring_BookMarket/books">Books</a>
-				<a class="navbar-brand" href="/spring_BookMarket/books/all">All</a>
-				<a class="navbar-brand" href="/spring_BookMarket/books/add">NewBook</a>
-			</div>
-		</div>
-	</nav>
 	
 	<% 	
 		Cart cart = null;
@@ -38,12 +28,6 @@
 		}
 		
 	%>
-	
-	<div class="jumbotron">
-		<div class="container">
-			<h1 class="display-3">장바구니</h1>
-		</div>
-	</div>
 	
 	<div class="container">
 		<div>
@@ -98,11 +82,6 @@
 			<a href="/spring_BookMarket/books" class="btn btn-secondary">쇼핑 계속하기</a>
 		</div>
 	</div>
-	
-		<footer class="container">
-			<hr>
-			<p>&copy; WebMarket</p>
-		</footer>
 
 <script type="text/javascript">
 	function removeFromCart(action) {
