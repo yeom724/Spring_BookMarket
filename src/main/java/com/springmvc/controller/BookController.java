@@ -202,7 +202,7 @@ public class BookController {
 	}
 	
 	@GetMapping("/update")
-	public String getUpdateBookForm(@ModelAttribute("updateBook") Book book, @RequestParam("id") String bookId, Model model) {
+	public String getUpdateBookForm(@RequestParam String bookId, @ModelAttribute("updateBook") Book book, Model model) {
 		System.out.println("업데이트 할 도서 정보를 가져옵니다.");
 		Book bookById = bookService.getBookById(bookId);
 		model.addAttribute("book", bookById);
@@ -217,9 +217,9 @@ public class BookController {
 		MultipartFile bookImage = book.getBookImage();
 		String save = req.getServletContext().getRealPath("resources/images");
 		
-		if(bookImage != null && (bookImage.isEmpty())) {
+		if(bookImage != null && !(bookImage.isEmpty())) {
 			try {
-				
+				System.out.println("파일 유효성 검사");
 				String fname = bookImage.getOriginalFilename();
 				bookImage.transferTo(new File(save+"/"+fname));
 				book.setFileName(fname);
@@ -233,6 +233,12 @@ public class BookController {
 		bookService.setUpdateBook(book);
 		System.out.println("도서 수정을 완료했습니다. 전체 목록으로 돌아갑니다.");
 		
+		return "redirect:/books";
+	}
+	
+	@RequestMapping("/delete")
+	public String getDeleteBookForm(Model model, @RequestParam("id") String bookId) {
+		bookService.setDeleteBook(bookId);
 		return "redirect:/books";
 	}
 }

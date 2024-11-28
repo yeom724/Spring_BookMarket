@@ -185,7 +185,7 @@ public class BookRepositoryImpl implements BookRepository {
 		
 		System.out.println("도서 정보를 수정합니다.");
 		String SQL = "update book set b_name=?, b_unitPrice=?, b_author=?, b_description=?, b_publisher=?, b_category=?, b_unitsInStock=?, b_releaseDate=?, b_condition=? where b_bookId=?";
-		template.update(SQL, book.getName(), book.getUnitPrice(), book.getAuthor(), book.getDescription(), book.getPublisher(), book.getCategory(), book.getUnitsInStock(), book.getReleaseDate(), book.getCondition());
+		template.update(SQL, book.getName(), book.getUnitPrice(), book.getAuthor(), book.getDescription(), book.getPublisher(), book.getCategory(), book.getUnitsInStock(), book.getReleaseDate(), book.getCondition(), book.getBookId());
 		
 		
 		if(book.getFileName() != null) {
@@ -195,6 +195,14 @@ public class BookRepositoryImpl implements BookRepository {
 			
 		}
 		
+	}
+
+	@Override
+	public void setDeleteBook(String bookId) {
+		// TODO Auto-generated method stub
+		String SQL = "delete from Book where b_bookId=?";
+		this.template.update(SQL, bookId);
+		System.out.println("해당 도서의 정보 삭제를 완료했습니다.");
 	}
 
 }

@@ -11,3 +11,8 @@ function removeFromCart(action){
 	window.location.reload();
 	
 }
+
+function deleteConfirm(id){
+	if (confirm("삭제합니다!!")==true) location.href = "/spring_BookMarket/books/delete?id="+id;
+	else return;
+}

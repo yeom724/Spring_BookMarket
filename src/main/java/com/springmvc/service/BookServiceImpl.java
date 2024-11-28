@@ -65,4 +65,12 @@ public class BookServiceImpl implements BookService {
 		
 	}
 
+	@Override
+	public void setDeleteBook(String bookId) {
+		// TODO Auto-generated method stub
+		System.out.println("삭제할 도서 받아오는 중...");
+		bookRepository.setDeleteBook(bookId);
+		
+	}
+
 }

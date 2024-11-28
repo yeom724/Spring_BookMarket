@@ -90,4 +90,11 @@
 		<put-attribute name="content" value="/WEB-INF/flows/order/orderCartWarning.jsp"></put-attribute>
 	</definition>
 	
+	<definition name="updateForm" extends="base_Template">
+		<put-attribute name="title" value="Book"></put-attribute>
+		<put-attribute name="heading" value="도서수정"></put-attribute>
+		<put-attribute name="subheading" value="Book Editing"></put-attribute>
+		<put-attribute name="content" value="/WEB-INF/views/updateForm.jsp"></put-attribute>
+	</definition>
+	
 </tiles-definitions>

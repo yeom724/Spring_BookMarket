@@ -20,13 +20,13 @@
 				<%
 					Book book = (Book)request.getAttribute("book");
 					
-					if(book.getBookImage() == null){
+					if(book.getFileName() == null){
 				%>
 						<img src="/spring_BookMarket/resources/images/<%= book.getBookId() %>.png" style="width: 100%;">
 				<%
 					} else {
 				%>
-						<img src="/spring_BookMarket/resources/images/<%= book.getFileName() %>" style="width: 60%;">
+						<img src="/spring_BookMarket/resources/images/<%= book.getFileName() %>" style="width: 100%;">
 				<%
 					}
 				%>
@@ -48,8 +48,9 @@
 					<p>	<a href="#" onclick="addToCart('/spring_BookMarket/cart/add/<%= book.getBookId() %>')" class="btn btn-primary">도서주문 &raquo;</a>
 						<a href="/spring_BookMarket/cart" class="btn btn-warning">장바구니 &raquo;</a>
 						<a href="/spring_BookMarket/books/all" class="btn btn-secondary">도서목록 &raquo;</a>
-						<sec:authorize access="isAuthenicated()">
-							<a href="/spring_BookMarket/update?=<%=book.getBookId()%>" class="btn btn-success">수정 &raquo;</a>
+						<sec:authorize access="isAuthenticated()">
+							<a href="/spring_BookMarket/books/update?bookId=<%=book.getBookId()%>" class="btn btn-success">수정 &raquo;</a>
+							<a href="javascript:deleteConfirm('<%=book.getBookId()%>')" class="btn btn-danger">삭제 &raquo;</a>
 						</sec:authorize>
 					</p>
 				</form:form>
