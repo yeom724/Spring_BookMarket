@@ -113,7 +113,6 @@ public class BookController {
 		// HashSet에 저장된 요소는 순서가 보장되지 않는다, 그래서 뷰에 반영하면 순서가 뒤섞인다.
 		Set<Book> booksByFilter = bookService.getBookListByFilter(bookFilter);
 		model.addAttribute("bookList",booksByFilter);
-		
 		System.out.println("필터 처리 완료! 뷰어로 돌아갑니다.");
 		return "books";
 	}
